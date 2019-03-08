@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
@@ -185,7 +186,7 @@ public class GameScreen implements Screen {
             tryTalking();
         if(!isTalking){
             if(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)){
-                //Loops through next 200 pixels individually to check collisions to allow pixel perfect ones
+                //Loops through next 200 pixels individually to check collisions to allow pixel perfect onesZ
                 for(int x=0; x<200;x++) {
                     if(talkers.size>0) {
                         for (Rectangle r : talkers) {

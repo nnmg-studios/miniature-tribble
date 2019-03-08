@@ -101,18 +101,18 @@ public class BattleScreen implements Screen {
         game.font.draw(game.batch, "Battle Screen.", 305, 240);
         game.batch.draw(enemyImg, 832-64-50, 225);
         if(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)){
-            player.y += 400*Gdx.graphics.getDeltaTime();
+            player.y += 300*Gdx.graphics.getDeltaTime();
             stayStill=new Texture(Gdx.files.internal("staticUp.png"));
             animateMove(upAnim);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)){
-            player.x -= 400*Gdx.graphics.getDeltaTime();
+            player.x -= 300*Gdx.graphics.getDeltaTime();
             stayStill=new Texture(Gdx.files.internal("staticLeft.png"));
             animateMove(leftAnim);}
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)){player.y -= 400*Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)){player.y -= 300*Gdx.graphics.getDeltaTime();
             stayStill=new Texture(Gdx.files.internal("static.png"));
             animateMove(downAnim);}
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)){player.x += 400*Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)){player.x += 300*Gdx.graphics.getDeltaTime();
             stayStill=new Texture(Gdx.files.internal("staticRight.png"));
             animateMove(rightAnim);}
         if(!(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)||Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)))

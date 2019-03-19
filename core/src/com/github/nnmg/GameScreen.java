@@ -50,35 +50,76 @@ public class GameScreen implements Screen {
     private Animation<TextureRegion> upAnim;
     private Animation<TextureRegion> leftAnim;
     private Animation<TextureRegion> rightAnim;
+    private Animation<TextureRegion>  swordAnims;
     private Texture stayStill;
+    private Texture tree;
+    private Texture sword;
+    private boolean slash;
     private float stateTime;
+    private float stateTime1;
     private int push;
 
+    @SuppressWarnings("GwtInconsistentSerializableClass")
+    public enum NPC{
+        BOB("Bob", new Texture(Gdx.files.internal("npc.png")), "Wow, lots of monsters out here.");
+        String name;
+        String dialogue;
+        Texture image;
+        NPC(String name, Texture image, String dialogue) {
+            this.name=name;
+            this.dialogue=dialogue;
+            this.image=image;
 
+        }
+
+        public String getDialogue() {
+            return dialogue;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Texture getImage() {
+            return image;
+        }
+    }
+    NPC bob;
     public GameScreen (final Main game) {
         //Will be used to count seconds (for autosave)
         push=0;
+        bob=NPC.BOB;
         //Two booleans used to control NPC talking
         talkHelper=true;
         talk=false;
+        slash=false;
         //Preferences, used to save the game
         prefs=Gdx.app.getPreferences("My Preferences");
         talkers=new Array<Rectangle>();
         //Instantiate images. Walk is a spritesheet
         walkSheet=new Texture(Gdx.files.internal("walk.png"));
+        sword=new Texture(Gdx.files.internal("sword.png"));
         stayStill=new Texture(Gdx.files.internal("static.png"));
         //Spritesheet split up into 8x4
         TextureRegion[][] walkRegion=TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS);
+        TextureRegion[][] swordRegion=TextureRegion.split(sword, sword.getWidth()/5, sword.getHeight());
         //Further split up by rows into up, down, left, and right
         TextureRegion[] walkDown=new TextureRegion[FRAME_COLS];
         TextureRegion[] walkUp=new TextureRegion[FRAME_COLS];
         TextureRegion[] walkLeft=new TextureRegion[FRAME_COLS];
         TextureRegion[] walkRight=new TextureRegion[FRAME_COLS];
+        TextureRegion[] swordAnim=new TextureRegion[5];
+        int indexS=0;
+        for(int i=0;i<5;i++)
+        {
+            swordAnim[indexS++]=swordRegion[0][i];
+        }
         //Add each individual sprite from each row into an array for animating (Don't worry about this)
         int indexD=0;
         int indexU=0;
         int indexR=0;
         int indexL=0;
+        tree=new Texture(Gdx.files.internal("tree.png"));
         for(int i=0; i<1; i++){
             for(int j=0; j<FRAME_COLS; j++){
                 walkDown[indexD++]=walkRegion[i][j];
@@ -104,7 +145,9 @@ public class GameScreen implements Screen {
         upAnim=new Animation<TextureRegion>(0.15f, walkUp);
         leftAnim=new Animation<TextureRegion>(0.15f, walkLeft);
         rightAnim=new Animation<TextureRegion>(0.15f, walkRight);
+        swordAnims=new Animation<TextureRegion>(0.08f, swordAnim);
         stateTime=0f;
+        stateTime1=0f;
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         isTalking=false;
@@ -148,7 +191,7 @@ public class GameScreen implements Screen {
         //For more information, see the Wiki on the Github
         loadMap(one, two);
 
-        createText("Wow! Lots of monsters around here, huh?");
+        createText(bob.dialogue);
 
     }
 
@@ -167,10 +210,11 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         //Begin drawing
         batch.begin();
+        batch.draw(tree, 0, 0);
         //Draw NPC at NPC position
         if(one==1&&two==0) {
             for(Rectangle r:talkers)
-                batch.draw(npcImage, r.x, r.y);
+                batch.draw(bob.image, r.x, r.y);
         }
         //Draw enemies at their respective positions
         for(Rectangle enemy: enemies) {
@@ -185,6 +229,9 @@ public class GameScreen implements Screen {
         if(talk)
             tryTalking();
         if(!isTalking){
+            if(Gdx.input.isKeyPressed(Input.Keys.Z)){
+                slash=true;
+            }
             if(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)){
                 //Loops through next 200 pixels individually to check collisions to allow pixel perfect onesZ
                 for(int x=0; x<200;x++) {
@@ -292,6 +339,16 @@ public class GameScreen implements Screen {
         else
             //If being talked to, stand still
             batch.draw(stayStill, player.x, player.y);
+        if(slash){
+            stateTime1+= Gdx.graphics.getDeltaTime();
+            TextureRegion currentFrame = swordAnims.getKeyFrame(stateTime1,true);
+            System.out.println(swordAnims.getKeyFrameIndex(stateTime1));
+            batch.draw(currentFrame, player.x+44, player.y);
+            if(swordAnims.getKeyFrameIndex(stateTime1)==4) {
+                stateTime1=0;
+                slash = false;
+            }
+        }
         batch.end();
 
         //Make sure you don't go out of bounds and will teleport you to the next map.

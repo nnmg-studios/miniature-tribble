@@ -25,6 +25,7 @@ public class BattleScreen implements Screen {
     private Texture stayStill;
     private Texture walkSheet;
     private float stateTime;
+    private Texture tree;
     Rectangle player;
 
     public BattleScreen(final Main game, Texture enemyImg, Texture playerImg){
@@ -34,6 +35,7 @@ public class BattleScreen implements Screen {
         fight.play();
         walkSheet=new Texture(Gdx.files.internal("walk.png"));
         stayStill=new Texture(Gdx.files.internal("static.png"));
+        tree=new Texture(Gdx.files.internal("tree.png"));
         this.enemyImg=enemyImg;
         this.playerImg=playerImg;
         this.enemyImg = new Texture(Gdx.files.internal("bucket.png"));
